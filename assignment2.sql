@@ -13,6 +13,19 @@ create table unitati_cazare
 	geom GEOMETRY(POLYGON, 4326) 
 );
 
+alter table unitati_cazare 
+add column statiune_id INTEGER NOT NULL;
+alter table unitati_cazare 
+add constraint unitati_cazare_statiune
+foreign key (statiune_id) references statiune(fid);
+
+alter table restaurant
+add statiune_id INTEGER NOT NULL;
+alter table unitati_cazare 
+add constraint restaurant_statiune
+foreign key (statiune_id) references statiune (fid);
+
+
 create table camere
 (
 	fid SERIAL PRIMARY KEY,
@@ -55,4 +68,32 @@ create table if not exists restaurant
 	meniu_id integer NOT NULL,
 	geom GEOMETRY(POINT, 4326) 
 );
+
+create table spitale
+(
+	fid SERIAL PRIMARY KEY,
+	denumire VARCHAR(50) NOT NULL,
+	adresa VARCHAR(100) NOT NULL,
+	statiune_id INTEGER NOT NULL,
+	geom GEOMETRY(POLYGON, 4326),
+	foreign key (statiune_id) references statiune (fid)
+	);
 	
+
+create table if not exists statiune
+(
+	fid SERIAL PRIMARY KEY,
+	denumire VARCHAR(50) NOT NULL,
+	geom GEOMETRY(POLYGON, 4326)
+	);
+	
+create table farmacii
+(
+fid SERIAL PRIMARY KEY,
+denumire VARCHAR(50) NOT NULL,
+adresa VARCHAR(100) NOT NULL,
+orar VARCHAR(50) NOT NULL,
+geom GEOMETRY(POLYGON, 4326),
+statiune_id INTEGER NOT NULL,
+foreign key (statiune_id) references statiune (fid)	
+);
